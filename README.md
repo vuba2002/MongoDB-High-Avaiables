@@ -133,13 +133,14 @@ mongosh --username admin -p
 
 ```javascript
 show dbs
-use devopseduvndb
+use mydb
 show collections
 ```
 
 > Thử chèn dữ liệu trên secondary sẽ thất bại:
 ```javascript
-db.accounts.insertOne({ "username": ["elroydevops", "manhnv"] })
+db.deployments.insertOne({ "application": "user-service", "environment": "development",
+"status": "Success", "duration": 32 })
 ```
 
 ---
@@ -148,8 +149,30 @@ db.accounts.insertOne({ "username": ["elroydevops", "manhnv"] })
 
 ### Trên server 1 (primary)
 ```javascript
-use devopseduvndb
-db.courses.insertOne({ "name": ["DevOps for freshers", "pipeline DevSecOps", "HA tools"] })
+use mydb;
+db.deployments.insertMany([
+{ "application": "user-service", "environment": "development",
+"status": "Success", "duration": 32 },
+{ "application": "inventory-service", "environment":
+"production", "status": "Failed", "duration": 50 },
+{ "application": "cart-service", "environment": "staging",
+"status": "Success", "duration": 29 },
+{ "application": "order-service", "environment": "production",
+"status": "Success", "duration": 60 },
+{ "application": "payment-service", "environment":
+"production", "status": "Success", "duration": 45 },
+{ "application": "auth-service", "environment": "staging",
+"status": "Failed", "duration": 28 },
+{ "application": "reporting-service", "environment":
+"development", "status": "Success", "duration": 36 },
+{ "application": "billing-service", "environment": "staging",
+"status": "Failed", "duration": 40 },
+{ "application": "email-service", "environment": "production",
+"status": "Success", "duration": 48 },
+{ "application": "sms-service", "environment": "staging",
+"status": "Failed", "duration": 33 }
+]);
+db.deployments.find().pretty()
 ```
 
 ### Sau đó khởi động lại server 1 để mô phỏng lỗi
@@ -241,7 +264,7 @@ systemctl restart keepalived
 
 - Ping `192.168.154.140` từ các máy khác
 - Tắt server đang giữ VIP, kiểm tra VIP chuyển sang máy khác chưa
-- Truy cập MongoDB qua địa chỉ VIP: `mongosh --host 192.168.213.14:27017 --username admin -p`
+- Truy cập MongoDB qua địa chỉ VIP: `mongosh --host 192.168.154.140:27017 --username admin -p`
 
 ---
 
