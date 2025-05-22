@@ -103,7 +103,7 @@ mongosh
 use admin
 db.createUser({
   user: "admin",
-  pwd: "your-secure-password",
+  pwd: "nguyenbavu2002",
   roles: [ { role: "root", db: "admin" } ]
 })
 ```
